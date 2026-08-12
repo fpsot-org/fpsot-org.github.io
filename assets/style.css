@@ -1,0 +1,104 @@
+/* FPSOT — civic-institutional. Navy primary, restrained accent, system fonts. */
+:root {
+  --navy: #14324f;
+  --navy-dark: #0d2337;
+  --accent: #b45309;
+  --ink: #1a1a1a;
+  --muted: #4b5563;
+  --paper: #ffffff;
+  --wash: #f3f6f9;
+  --line: #d7dee6;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+a { color: var(--navy); }
+a:focus-visible, button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Header */
+.site-header {
+  border-top: 6px solid var(--navy);
+  border-bottom: 1px solid var(--line);
+}
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+}
+.site-header .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+.site-header .brand img { height: 2rem; width: auto; }
+.site-header nav { display: flex; align-items: center; gap: 1.25rem; }
+.site-header nav a { text-decoration: none; font-weight: 600; }
+.lang-switch { border: 1px solid var(--line); border-radius: 4px; padding: 0.25rem 0.6rem; }
+
+/* Hero */
+.hero { background: var(--navy); color: #ffffff; padding: 4rem 0 4.5rem; }
+.hero h1 { font-size: clamp(1.9rem, 4.5vw, 3rem); line-height: 1.15; margin: 0 0 1rem; max-width: 40rem; }
+.hero p { font-size: 1.15rem; max-width: 38rem; margin: 0 0 2rem; color: #dbe5ee; }
+.cta-button {
+  display: inline-block;
+  background: #ffffff;
+  color: var(--navy-dark);
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+}
+.cta-button:hover { background: var(--wash); }
+
+/* Sections */
+main section { padding: 3.5rem 0; }
+main section h2 { font-size: 1.6rem; margin: 0 0 1.5rem; color: var(--navy-dark); }
+
+/* Pillars */
+.pillars { background: var(--paper); }
+.pillars .grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+.card { border: 1px solid var(--line); border-left: 4px solid var(--navy); border-radius: 4px; padding: 1.25rem 1.4rem; }
+.card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+.card p { margin: 0; color: var(--muted); }
+
+/* Focus areas */
+.focus { background: var(--wash); }
+.focus-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+.focus-list li { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 0.9rem 1.2rem; }
+.focus-list strong { color: var(--navy-dark); }
+.focus .status { color: var(--muted); font-size: 0.95rem; margin-top: 1.25rem; }
+
+/* Get involved */
+.get-involved ul { margin: 0; padding-left: 1.2rem; }
+.get-involved li { margin-bottom: 0.5rem; }
+
+/* Footer */
+.site-footer { border-top: 1px solid var(--line); padding: 1.5rem 0 2rem; color: var(--muted); font-size: 0.95rem; }
+.site-footer .container { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; justify-content: space-between; }
+.site-footer a { color: var(--muted); }
+
+@media (max-width: 40rem) {
+  .pillars .grid { grid-template-columns: 1fr; }
+  .hero { padding: 3rem 0; }
+}
