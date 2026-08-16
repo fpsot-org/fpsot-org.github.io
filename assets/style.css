@@ -55,7 +55,8 @@ a:focus-visible, button:focus-visible {
 /* Hero */
 .hero { background: var(--navy); color: #ffffff; padding: 4rem 0 4.5rem; }
 .hero h1 { font-size: clamp(1.9rem, 4.5vw, 3rem); line-height: 1.15; margin: 0 0 1rem; max-width: 40rem; }
-.hero p { font-size: 1.15rem; max-width: 38rem; margin: 0 0 2rem; color: #dbe5ee; }
+.hero p { font-size: 1.15rem; max-width: 38rem; margin: 0 0 1.1rem; color: #dbe5ee; }
+.hero p:last-of-type { margin-bottom: 2rem; }
 .cta-button {
   display: inline-block;
   background: #ffffff;
