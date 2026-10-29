@@ -1,15 +1,60 @@
 /* FPSOT — civic-institutional. Navy primary, restrained accent, system fonts. */
+
+/* ---------- tokens ---------- */
 :root {
+  color-scheme: light dark;
+
   --navy: #14324f;
   --navy-dark: #0d2337;
-  --accent: #b45309;
+
+  /* semantic — light */
+  --paper: #ffffff;    /* page background */
+  --wash: #f3f6f9;     /* alternate section background */
+  --surface: #ffffff;  /* cards and list items */
   --ink: #1a1a1a;
   --muted: #4b5563;
-  --paper: #ffffff;
-  --wash: #f3f6f9;
   --line: #d7dee6;
+  --link: var(--navy);
+  --heading: var(--navy-dark);
+  --brand: var(--navy); /* header rule, card edge */
+  --accent: #b45309;    /* wordmark bar, focus ring */
 }
 
+/* Dark tokens apply when the OS prefers dark and the visitor hasn't forced light,
+   or when the visitor forces dark with the toggle (data-theme is set by
+   assets/js/theme.js and saved in localStorage "fpsot-color-scheme"). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0e1620;
+    --wash: #121e2b;
+    --surface: #172636;
+    --ink: #e6edf3;
+    --muted: #a3b3c2;
+    --line: #2a3c4e;
+    --link: #9cc7ee;
+    --heading: #eef3f8;
+    --brand: #5b8fc0;
+    --accent: #e8913a;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #0e1620;
+  --wash: #121e2b;
+  --surface: #172636;
+  --ink: #e6edf3;
+  --muted: #a3b3c2;
+  --line: #2a3c4e;
+  --link: #9cc7ee;
+  --heading: #eef3f8;
+  --brand: #5b8fc0;
+  --accent: #e8913a;
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+/* ---------- base ---------- */
 * { box-sizing: border-box; }
 
 body {
@@ -27,7 +72,7 @@ body {
   padding: 0 1.25rem;
 }
 
-a { color: var(--navy); }
+a { color: var(--link); }
 a:focus-visible, button:focus-visible {
   outline: 3px solid var(--accent);
   outline-offset: 2px;
@@ -35,7 +80,7 @@ a:focus-visible, button:focus-visible {
 
 /* Header */
 .site-header {
-  border-top: 6px solid var(--navy);
+  border-top: 6px solid var(--brand);
   border-bottom: 1px solid var(--line);
 }
 .site-header .container {
@@ -47,13 +92,37 @@ a:focus-visible, button:focus-visible {
   padding-bottom: 0.9rem;
 }
 .site-header .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
-.site-header .brand img { height: 2rem; width: auto; }
+.site-header .brand img,
+.site-header .brand svg { height: 2rem; width: auto; }
 .site-header .brand img.emblem { height: 2.75rem; }
+.wordmark .bar { fill: var(--accent); }
+.wordmark text { fill: var(--heading); }
 .site-header nav { display: flex; align-items: center; gap: 1.25rem; }
 .site-header nav a { text-decoration: none; font-weight: 600; }
 .lang-switch { border: 1px solid var(--line); border-radius: 4px; padding: 0.25rem 0.6rem; }
 
-/* Hero */
+/* Theme toggle: one icon per state; no data-theme means "system" */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  padding: 0;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.theme-toggle[hidden] { display: none; }
+.theme-toggle:hover { color: var(--link); border-color: var(--link); }
+.theme-toggle svg { display: none; }
+:root:not([data-theme]) .theme-toggle .icon-system,
+:root[data-theme="light"] .theme-toggle .icon-light,
+:root[data-theme="dark"] .theme-toggle .icon-dark { display: block; }
+
+/* Hero — navy in both schemes */
 .hero { background: var(--navy); color: #ffffff; padding: 4rem 0 4.5rem; }
 .hero h1 { font-size: clamp(1.9rem, 4.5vw, 3rem); line-height: 1.15; margin: 0 0 1rem; max-width: 40rem; }
 .hero p { font-size: 1.15rem; max-width: 38rem; margin: 0 0 1.1rem; color: #dbe5ee; }
@@ -67,11 +136,11 @@ a:focus-visible, button:focus-visible {
   padding: 0.8rem 1.5rem;
   border-radius: 4px;
 }
-.cta-button:hover { background: var(--wash); }
+.cta-button:hover { background: #f3f6f9; }
 
 /* Sections */
 main section { padding: 3.5rem 0; }
-main section h2 { font-size: 1.6rem; margin: 0 0 1.5rem; color: var(--navy-dark); }
+main section h2 { font-size: 1.6rem; margin: 0 0 1.5rem; color: var(--heading); }
 
 /* Pillars */
 .pillars { background: var(--paper); }
@@ -80,15 +149,15 @@ main section h2 { font-size: 1.6rem; margin: 0 0 1.5rem; color: var(--navy-dark)
   grid-template-columns: repeat(2, 1fr);
   gap: 1.25rem;
 }
-.card { border: 1px solid var(--line); border-left: 4px solid var(--navy); border-radius: 4px; padding: 1.25rem 1.4rem; }
+.card { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--brand); border-radius: 4px; padding: 1.25rem 1.4rem; }
 .card h3 { margin: 0 0 0.5rem; font-size: 1.1rem; }
 .card p { margin: 0; color: var(--muted); }
 
 /* Focus areas */
 .focus { background: var(--wash); }
 .focus-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
-.focus-list li { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 0.9rem 1.2rem; }
-.focus-list strong { color: var(--navy-dark); }
+.focus-list li { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 0.9rem 1.2rem; }
+.focus-list strong { color: var(--heading); }
 .focus .status { color: var(--muted); font-size: 0.95rem; margin-top: 1.25rem; }
 
 /* Get involved */
@@ -103,4 +172,10 @@ main section h2 { font-size: 1.6rem; margin: 0 0 1.5rem; color: var(--navy-dark)
 @media (max-width: 40rem) {
   .pillars .grid { grid-template-columns: 1fr; }
   .hero { padding: 3rem 0; }
+  .site-header .container { gap: 0.6rem; }
+  .site-header .brand { gap: 0.45rem; }
+  .site-header .brand img.emblem { height: 2.25rem; }
+  .site-header .brand svg.wordmark { height: 1.6rem; }
+  .site-header nav { gap: 0.6rem; }
+  .lang-switch { padding: 0.25rem 0.45rem; }
 }
