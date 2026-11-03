@@ -1,0 +1,9 @@
+/* Spec pages: AsciiDoc content inside the site layout. */
+.spec-page .container { max-width: 60rem; padding-top: 2rem; padding-bottom: 3rem; }
+.spec-crumb { margin: 0 0 0.5rem; font-size: 0.95rem; }
+.spec-meta { margin: 0 0 2rem; color: var(--muted, inherit); font-size: 0.95rem; }
+.spec-body table { border-collapse: collapse; width: 100%; margin: 1rem 0; display: block; overflow-x: auto; }
+.spec-body th, .spec-body td { border: 1px solid var(--line); padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+.spec-body abbr[title] { text-decoration: underline dotted; }
+.spec-body .admonitionblock { border-left: 4px solid var(--line); padding: 0.5rem 1rem; margin: 1rem 0; }
+.spec-body pre { overflow-x: auto; padding: 0.75rem; border: 1px solid var(--line); }

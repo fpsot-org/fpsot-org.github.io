@@ -1,0 +1,4 @@
+# Spec repositories the site collects, at their highest vX.Y.Z tag.
+- repo: fpsot-spec-writing
+- repo: fpsot-spec-doc
+- repo: fpsot-spec-vcs

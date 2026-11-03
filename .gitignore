@@ -1,1 +1,21 @@
+target/
 .worktrees/
+# Collected by the site build.
+content/_src/
+content/writing/
+content/doc/
+content/vcs/
+content/good/
+content/fr/writing/
+content/fr/doc/
+content/fr/vcs/
+content/fr/good/
+public/writing/
+public/doc/
+public/vcs/
+public/good/
+node_modules/
+package.json
+package-lock.json
+replay_pid*.log
+hs_err_pid*.log
