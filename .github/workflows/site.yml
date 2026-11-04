@@ -1,0 +1,44 @@
+# SPDX-License-Identifier: Apache-2.0
+# Builds fpsot.org from the released specs, and deploys it from main, on demand and
+# when a spec release asks for it. Pull requests build only.
+name: site
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [spec-released]
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    uses: fpsot-org/GitHub-Actions/.github/workflows/site-build.yml@v0
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+  pr-title:
+    if: github.event_name == 'pull_request'
+    uses: fpsot-org/GitHub-Actions/.github/workflows/pr-title.yml@v0
+    permissions:
+      pull-requests: read
+  signed-commits:
+    if: github.event_name == 'pull_request'
+    uses: fpsot-org/GitHub-Actions/.github/workflows/signed-commits.yml@v0
+    permissions:
+      contents: read
+      pull-requests: read

@@ -1,0 +1,24 @@
+{#let lang=(page.data.getString('lang') ?: 'en') alternate=page.data.getString('alternate')}
+<!DOCTYPE html>
+<html lang="{lang}">
+<head>
+{#include partials/head /}
+  <title>{page.title} — FPSOT</title>
+  <link rel="canonical" href="https://fpsot.org{page.url.path}">
+  {#if alternate}<link rel="alternate" hreflang="{#if lang == 'fr'}en{#else}fr{/if}" href="https://fpsot.org{alternate}">{/if}
+</head>
+<body>
+{#include partials/header lang=lang alternate=alternate /}
+  <main class="spec-page">
+    <div class="container">
+      <p class="spec-crumb"><a href="{#if lang == 'fr'}/fr{/if}/{page.data.spec}/">{page.data.getString('spec-title') ?: page.data.spec}</a></p>
+      <p class="spec-meta">Version {page.data.version} · {#if lang == 'fr'}Mise à jour le{#else}Updated{/if} <time datetime="{page.data.updated}">{page.data.updated}</time></p>
+      <div class="spec-body">
+{#insert /}
+      </div>
+    </div>
+  </main>
+{#include partials/footer lang=lang /}
+</body>
+</html>
+{/let}
