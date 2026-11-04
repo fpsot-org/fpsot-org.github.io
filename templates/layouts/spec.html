@@ -11,7 +11,7 @@
 {#include partials/header lang=lang alternate=alternate /}
   <main class="spec-page">
     <div class="container">
-      <p class="spec-crumb"><a href="{#if lang == 'fr'}/fr{/if}/{page.data.spec}/">{#if lang == 'fr'}Spécification{#else}Specification{/if} {page.data.spec}</a></p>
+      <p class="spec-crumb"><a href="{#if lang == 'fr'}/fr{/if}/{page.data.spec}/">{page.data.getString('spec-title') ?: page.data.spec}</a></p>
       <p class="spec-meta">Version {page.data.version} · {#if lang == 'fr'}Mise à jour le{#else}Updated{/if} <time datetime="{page.data.updated}">{page.data.updated}</time></p>
       <div class="spec-body">
 {#insert /}

@@ -7,3 +7,9 @@
 .spec-body abbr[title] { text-decoration: underline dotted; }
 .spec-body .admonitionblock { border-left: 4px solid var(--line); padding: 0.5rem 1rem; margin: 1rem 0; }
 .spec-body pre { overflow-x: auto; padding: 0.75rem; border: 1px solid var(--line); }
+/* Asciidoctor lays admonitions out as a table: no cell borders there. */
+.spec-body .admonitionblock table { display: table; width: auto; margin: 0; }
+.spec-body .admonitionblock td { border: none; padding: 0 0.75rem 0 0; }
+.spec-body .admonitionblock td.icon { font-weight: bold; white-space: nowrap; }
+/* Asciidoctor wraps each table cell in a paragraph: no extra margin. */
+.spec-body td > p, .spec-body th > p { margin: 0; }
