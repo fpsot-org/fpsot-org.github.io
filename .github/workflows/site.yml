@@ -12,15 +12,17 @@ on:
     types: [spec-released]
 permissions:
   contents: read
-concurrency:
-  group: pages
-  cancel-in-progress: false
 jobs:
   build:
     uses: fpsot-org/GitHub-Actions/.github/workflows/site-build.yml@v0
   deploy:
     if: github.event_name != 'pull_request'
     needs: build
+    # One deploy at a time. Only deploys share the group, so a pull request run never
+    # cancels a deploy that waits for its turn.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     runs-on: ubuntu-24.04
     permissions:
       pages: write
