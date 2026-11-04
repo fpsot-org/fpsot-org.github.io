@@ -2,3 +2,7 @@
 - repo: fpsot-spec-writing
 - repo: fpsot-spec-doc
 - repo: fpsot-spec-vcs
+- repo: fpsot-spec-naming
+- repo: fpsot-spec-i18n
+- repo: fpsot-spec-data-types
+- repo: fpsot-spec-api-restful
