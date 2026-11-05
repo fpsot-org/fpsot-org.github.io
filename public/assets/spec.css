@@ -13,3 +13,75 @@
 .spec-body .admonitionblock td.icon { font-weight: bold; white-space: nowrap; }
 /* Asciidoctor wraps each table cell in a paragraph: no extra margin. */
 .spec-body td > p, .spec-body th > p { margin: 0; }
+
+/* Code colours. Rouge colours the code when the site is built, so no highlighter
+   ships to the browser. The scheme follows sitenetsoft.org; four light colours are
+   darker (comment #8a9199, string #43843f, function #3a6fd8, tag #d1453b in the
+   original) so that each reaches 4.5:1 on the code background
+   (scripts/test-contrast.py). */
+:root {
+  --hl-comment: #697078;
+  --hl-keyword: #a626a4;
+  --hl-string: #3e7a3a;
+  --hl-number: #97600a;
+  --hl-function: #3169d6;
+  --hl-tag: #c9392f;
+  --hl-attr: #97600a;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --hl-comment: #7f8996;
+    --hl-keyword: #c678dd;
+    --hl-string: #98c379;
+    --hl-number: #d19a66;
+    --hl-function: #61afef;
+    --hl-tag: #e06c75;
+    --hl-attr: #d19a66;
+  }
+}
+:root[data-theme="dark"] {
+  --hl-comment: #7f8996;
+  --hl-keyword: #c678dd;
+  --hl-string: #98c379;
+  --hl-number: #d19a66;
+  --hl-function: #61afef;
+  --hl-tag: #e06c75;
+  --hl-attr: #d19a66;
+}
+.spec-body pre { background: var(--wash); }
+.spec-body .highlight .c, .spec-body .highlight .c1, .spec-body .highlight .cm, .spec-body .highlight .cs,
+.spec-body .highlight .ch, .spec-body .highlight .cpf { color: var(--hl-comment); font-style: italic; }
+.spec-body .highlight .k, .spec-body .highlight .kc, .spec-body .highlight .kd, .spec-body .highlight .kn,
+.spec-body .highlight .kp, .spec-body .highlight .kr, .spec-body .highlight .kt, .spec-body .highlight .nb,
+.spec-body .highlight .ow { color: var(--hl-keyword); }
+.spec-body .highlight .s, .spec-body .highlight .s1, .spec-body .highlight .s2, .spec-body .highlight .sb,
+.spec-body .highlight .sc, .spec-body .highlight .sd, .spec-body .highlight .se, .spec-body .highlight .sh,
+.spec-body .highlight .si, .spec-body .highlight .sx, .spec-body .highlight .sr, .spec-body .highlight .ss,
+.spec-body .highlight .dl { color: var(--hl-string); }
+.spec-body .highlight .m, .spec-body .highlight .mi, .spec-body .highlight .mf, .spec-body .highlight .mh,
+.spec-body .highlight .mo, .spec-body .highlight .il, .spec-body .highlight .nv, .spec-body .highlight .vi,
+.spec-body .highlight .vg { color: var(--hl-number); }
+.spec-body .highlight .nf, .spec-body .highlight .fm, .spec-body .highlight .nc, .spec-body .highlight .nn,
+.spec-body .highlight .cp, .spec-body .highlight .gh, .spec-body .highlight .gu { color: var(--hl-function); }
+.spec-body .highlight .nt, .spec-body .highlight .gd { color: var(--hl-tag); }
+.spec-body .highlight .na, .spec-body .highlight .nl, .spec-body .highlight .py, .spec-body .highlight .gi { color: var(--hl-attr); }
+
+/* Links that leave fpsot.org: a box with an arrow after the text. Screen readers
+   announce "external link" ("lien externe" on French pages). The link opens in the
+   same tab. */
+.spec-body a[href^="http"]:not([href^="https://fpsot.org"]):not([href^="https://github.com/fpsot-org/"])::after {
+  content: "" / "external link";
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  margin-left: 0.2em;
+  vertical-align: baseline;
+  background-color: currentColor;
+  mask: url(/assets/external.svg) no-repeat center / contain;
+}
+.spec-body a[href^="http"]:not([href^="https://fpsot.org"]):not([href^="https://github.com/fpsot-org/"]):lang(fr)::after {
+  content: "" / "lien externe";
+}
+@media print {
+  .spec-body a[href^="http"]::after { display: none; }
+}

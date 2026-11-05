@@ -12,6 +12,20 @@ trap cleanup EXIT
 fail=0
 src="$work/fpsot-spec-good"
 cp -r "$FPSOT_TOOLS/testdata/spec-good" "$src"
+# A code block, to check that code is coloured. It goes before the document history.
+python3 - "$src/spec/en/index.adoc" <<'PY'
+import sys
+p = sys.argv[1]
+s = open(p, encoding="utf-8").read()
+block = '[source,json]\n----\n{"name": "FPSOT", "version": 1}\n----\n\n'
+# More languages: Rouge compiles each lexer on first use, and pages render in
+# parallel, so several blocks give a race a chance to show.
+for lang, code in [("yaml", "name: FPSOT\nversion: 1"), ("http", "GET /v1/parties HTTP/1.1\nHost: api.example.com"),
+                   ("shell", "git tag -s v1.0.0 -m v1.0.0"), ("xml", "<unit id=\"1\"><source>Hi</source></unit>"),
+                   ("properties", "greeting=Hello")] * 4:
+    block += f'[source,{lang}]\n----\n{code}\n----\n\n'
+open(p, "w", encoding="utf-8").write(s.replace("== Document history", block + "== Document history", 1))
+PY
 git -C "$src" init -q
 git -C "$src" add -A
 git -C "$src" -c user.name=t -c user.email=t@example.org -c commit.gpgsign=false commit -q -m fixture
@@ -37,6 +51,23 @@ has fr/good/index.html '<link rel="alternate" hreflang="en" href="https://fpsot.
 has fr/good/index.html 'href="/fr/good/glossary/#gl-api"'
 hasnot fr/good/index.html '{abbr-'
 has good/index.html '<html lang="en"'
+# Code is coloured when the site is built: Rouge classes, no inline style.
+has good/index.html '<pre class="rouge highlight">'
+has good/index.html '<span class="s2">"FPSOT"</span>'
+# Rouge's markup carries no inline style (Asciidoctor's table column widths do, elsewhere).
+python3 -I -c 'import re,sys; s=open(sys.argv[1],encoding="utf-8").read(); sys.exit(any("style=" in b for b in re.findall(r"<pre class=\"rouge highlight\">.*?</pre>", s, re.S)))' "$out/good/index.html" \
+  || { echo "FAIL: highlighted code has an inline style"; fail=1; }
+# No token is an error: Rouge lexed every block (book and page render in parallel).
+for f in good/index.html good/book/index.html; do
+  grep -q 'class="err"' "$out/$f" && { echo "FAIL: $f has a Rouge error token (lexer compiled by two threads at once?)"; fail=1; }
+done
+# JSON keys are coloured like attributes.
+grep -q '\.highlight \.nl' "$out/assets/spec.css" || { echo "FAIL: spec.css does not colour JSON keys (.nl)"; fail=1; }
+# Links that leave fpsot.org carry the external-link icon, announced in each language.
+has assets/spec.css 'content: "" / "external link";'
+has assets/spec.css 'content: "" / "lien externe";'
+[ -f "$out/assets/external.svg" ] || { echo "FAIL: assets/external.svg missing"; fail=1; }
+python3 -I scripts/test-contrast.py >"$work/contrast.log" || { echo "FAIL: code colour contrast:"; cat "$work/contrast.log"; fail=1; }
 [ "$(grep -c '<h1' "$out/fr/good/index.html")" = 1 ] || { echo "FAIL: fr/good/index.html has more than one h1"; fail=1; }
 has good/compare/pages/fr/index.html '<html lang="en"'
 has fr/good/compare/pages/ca/index.html '<html lang="fr"'
