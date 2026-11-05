@@ -6,3 +6,6 @@
 - repo: fpsot-spec-i18n
 - repo: fpsot-spec-data-types
 - repo: fpsot-spec-api-restful
+- repo: fpsot-spec-accessibility
+- repo: fpsot-spec-diagrams
+- repo: fpsot-spec-style
