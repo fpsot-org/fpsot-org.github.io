@@ -65,6 +65,8 @@ done
 grep -q '\.highlight \.nl' "$out/assets/spec.css" || { echo "FAIL: spec.css does not colour JSON keys (.nl)"; fail=1; }
 # Links that leave fpsot.org carry the external-link icon, announced in each language.
 has assets/spec.css 'content: "" / "external link";'
+# Browsers without alternative text for generated content keep the icon: a plain declaration comes first.
+grep -B1 'content: "" / "external link";' "$out/assets/spec.css" | head -1 | grep -qF 'content: "";' || { echo "FAIL: no plain content fallback before the icon's alternative text"; fail=1; }
 has assets/spec.css 'content: "" / "lien externe";'
 [ -f "$out/assets/external.svg" ] || { echo "FAIL: assets/external.svg missing"; fail=1; }
 python3 -I scripts/test-contrast.py >"$work/contrast.log" || { echo "FAIL: code colour contrast:"; cat "$work/contrast.log"; fail=1; }
