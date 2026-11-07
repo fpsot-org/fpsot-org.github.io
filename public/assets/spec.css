@@ -70,6 +70,7 @@
    announce "external link" ("lien externe" on French pages). The link opens in the
    same tab. */
 .spec-body a[href^="http"]:not([href^="https://fpsot.org"]):not([href^="https://github.com/fpsot-org/"])::after {
+  content: "";
   content: "" / "external link";
   display: inline-block;
   width: 0.7em;
