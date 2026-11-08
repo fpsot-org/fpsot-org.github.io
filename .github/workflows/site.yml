@@ -14,9 +14,7 @@ permissions:
   contents: read
 jobs:
   build:
-    uses: fpsot-org/GitHub-Actions/.github/workflows/site-build.yml@feat/pdf-downloads
-    with:
-      tools-ref: feat/pdf-downloads
+    uses: fpsot-org/GitHub-Actions/.github/workflows/site-build.yml@v0
   deploy:
     if: github.event_name != 'pull_request'
     needs: build
