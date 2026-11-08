@@ -159,6 +159,7 @@ main section h2 { font-size: 1.6rem; margin: 0 0 1.5rem; color: var(--heading); 
 .focus-list li { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 0.9rem 1.2rem; }
 .focus-list strong { color: var(--heading); }
 .focus .status { color: var(--muted); font-size: 0.95rem; margin-top: 1.25rem; }
+.focus .book-download { font-size: 0.95rem; margin-top: 1.25rem; }
 
 /* Get involved */
 .get-involved ul { margin: 0; padding-left: 1.2rem; }

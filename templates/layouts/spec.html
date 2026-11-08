@@ -13,6 +13,11 @@
     <div class="container">
       <p class="spec-crumb"><a href="{#if lang == 'fr'}/fr{/if}/{page.data.spec}/">{page.data.getString('spec-title') ?: page.data.spec}</a></p>
       <p class="spec-meta">Version {page.data.version} · {#if lang == 'fr'}Mise à jour le{#else}Updated{/if} <time datetime="{page.data.updated}">{page.data.updated}</time></p>
+      {#let pdf=page.data.getString('pdf') other=page.data.getString('pdf-other')}
+      {#if pdf}
+      <p class="spec-download">{#if lang == 'fr'}<a href="{pdf}" type="application/pdf" hreflang="fr">Télécharger le PDF (français, {size:of(page.data.getString('pdf-bytes'), lang)})</a>{#else}<a href="{pdf}" type="application/pdf" hreflang="en">Download the PDF (English, {size:of(page.data.getString('pdf-bytes'), lang)})</a>{/if}{#if other}<span aria-hidden="true"> · </span>{#if lang == 'fr'}<a href="{other}" type="application/pdf" hreflang="en">PDF anglais ({size:of(page.data.getString('pdf-other-bytes'), lang)})</a>{#else}<a href="{other}" type="application/pdf" hreflang="fr">French PDF ({size:of(page.data.getString('pdf-other-bytes'), lang)})</a>{/if}{/if}</p>
+      {/if}
+      {/let}
       <div class="spec-body">
 {#insert /}
       </div>

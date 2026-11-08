@@ -1,0 +1,7 @@
+{! The book with every spec, one PDF per language. The site build passes the size of each
+   in fpsot.book.en-bytes and fpsot.book.fr-bytes; without them, no link is shown. !}
+{#let en=config:['fpsot.book.en-bytes'].or('') fr=config:['fpsot.book.fr-bytes'].or('')}
+{#if en && fr}
+        <p class="book-download">{#if lang == 'fr'}<a href="/fr/fpsot-specifications-fr.pdf" type="application/pdf" hreflang="fr">Télécharger toutes les spécifications en un seul PDF (français, {size:of(fr, lang)})</a><span aria-hidden="true"> · </span><a href="/fpsot-specifications-en.pdf" type="application/pdf" hreflang="en">PDF anglais ({size:of(en, lang)})</a>{#else}<a href="/fpsot-specifications-en.pdf" type="application/pdf" hreflang="en">Download all the specifications as one PDF (English, {size:of(en, lang)})</a><span aria-hidden="true"> · </span><a href="/fr/fpsot-specifications-fr.pdf" type="application/pdf" hreflang="fr">French PDF ({size:of(fr, lang)})</a>{/if}</p>
+{/if}
+{/let}
