@@ -33,6 +33,12 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+  home-list:
+    # The home page lists the specs by hand; this fails when it misses one.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: bash scripts/test-home-list.sh
   pr-title:
     if: github.event_name == 'pull_request'
     uses: fpsot-org/GitHub-Actions/.github/workflows/pr-title.yml@v0
