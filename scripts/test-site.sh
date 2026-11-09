@@ -94,5 +94,17 @@ has index.html "<a href=\"/fpsot-specifications-en.pdf\" type=\"application/pdf\
 has index.html "<a href=\"/fr/fpsot-specifications-fr.pdf\" type=\"application/pdf\" hreflang=\"fr\">French PDF (3.5${nb}MB)</a>"
 has fr/index.html "<a href=\"/fr/fpsot-specifications-fr.pdf\" type=\"application/pdf\" hreflang=\"fr\">Télécharger toutes les spécifications en un seul PDF (français, 3,5${nb}Mo)</a>"
 has fr/index.html "<a href=\"/fpsot-specifications-en.pdf\" type=\"application/pdf\" hreflang=\"en\">PDF anglais (3,5${nb}Mo)</a>"
+# Each spec page names the spec's own copyright and licenses; the footer says that
+# the site's license covers the website's code.
+for f in good/index.html good/glossary/index.html; do
+  has $f '<p class="spec-legal">Copyright 2026 The FPSOT Authors<span aria-hidden="true"> · </span>Specification: <a href="https://github.com/CommunitySpecification/1.0">Community Specification License 1.0</a><span aria-hidden="true"> · </span>Code samples: <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a></p>'
+done
+has fr/good/index.html '<p class="spec-legal">© 2026 Les auteurs de la FPSOT<span aria-hidden="true"> · </span>Spécification&nbsp;: <a href="https://github.com/CommunitySpecification/1.0">licence Community Specification 1.0</a><span aria-hidden="true"> · </span>Exemples de code&nbsp;: <a href="https://www.apache.org/licenses/LICENSE-2.0">licence Apache 2.0</a></p>'
+for f in index.html good/index.html; do
+  has $f 'Website code: <a href="https://github.com/fpsot-org/fpsot-org.github.io/blob/main/LICENSE">Apache-2.0</a>'
+done
+for f in fr/index.html fr/good/index.html; do
+  has $f 'Code du site&nbsp;: <a href="https://github.com/fpsot-org/fpsot-org.github.io/blob/main/LICENSE">Apache-2.0</a>'
+done
 [ $fail -eq 0 ] && echo "PASS"
 exit $fail
