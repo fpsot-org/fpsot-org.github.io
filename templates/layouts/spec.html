@@ -21,6 +21,11 @@
       <div class="spec-body">
 {#insert /}
       </div>
+      {#let license=page.data.getString('license') code=page.data.getString('code-license')}
+      {#if license}
+      <p class="spec-legal">{page.data.getString('copyright')}<span aria-hidden="true"> · </span>{#if lang == 'fr'}Spécification&nbsp;: {#else}Specification: {/if}<a href="{page.data.getString('license-url')}">{license}</a>{#if code}<span aria-hidden="true"> · </span>{#if lang == 'fr'}Exemples de code&nbsp;: {#else}Code samples: {/if}<a href="{page.data.getString('code-license-url')}">{code}</a>{/if}</p>
+      {/if}
+      {/let}
     </div>
   </main>
 {#include partials/footer lang=lang /}

@@ -5,6 +5,8 @@
 /* The PDF links sit just under the version line, and take its space below. */
 .spec-meta:has(+ .spec-download) { margin-bottom: 0.5rem; }
 .spec-download { margin: 0 0 2rem; font-size: 0.95rem; }
+/* The spec's own copyright and licenses, under its text; the site footer covers the website. */
+.spec-legal { margin: 2.5rem 0 0; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; }
 .spec-body table { border-collapse: collapse; width: 100%; margin: 1rem 0; display: block; overflow-x: auto; }
 .spec-body th, .spec-body td { border: 1px solid var(--line); padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
 .spec-body abbr[title] { text-decoration: underline dotted; }
