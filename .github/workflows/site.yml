@@ -39,6 +39,15 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: bash scripts/test-home-list.sh
+  site-ok:
+    # One required check for branch protection: it fails unless the whole build and
+    # the home-list check passed. A skipped job would otherwise count as a pass.
+    if: always()
+    needs: [build, home-list]
+    runs-on: ubuntu-24.04
+    steps:
+      - run: |
+          [ "${{ needs.build.result }}" = success ] && [ "${{ needs.home-list.result }}" = success ]
   pr-title:
     if: github.event_name == 'pull_request'
     uses: fpsot-org/GitHub-Actions/.github/workflows/pr-title.yml@v0
