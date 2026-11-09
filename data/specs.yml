@@ -12,3 +12,4 @@
 - repo: fpsot-spec-vocabularies
 - repo: fpsot-spec-data-models
 - repo: fpsot-spec-testing
+- repo: fpsot-spec-security
