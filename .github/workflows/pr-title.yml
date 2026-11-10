@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: Apache-2.0
+# Checks the pull request title, also when only the title is edited. The site build
+# in site.yml does not run on a title edit.
+name: pr-title
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+permissions:
+  contents: read
+jobs:
+  pr-title:
+    uses: fpsot-org/GitHub-Actions/.github/workflows/pr-title.yml@v0
+    permissions:
+      pull-requests: read

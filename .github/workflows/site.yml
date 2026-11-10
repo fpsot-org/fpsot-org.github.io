@@ -6,7 +6,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    types: [opened, edited, synchronize, reopened]
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
   repository_dispatch:
     types: [spec-released]
@@ -48,11 +48,6 @@ jobs:
     steps:
       - run: |
           [ "${{ needs.build.result }}" = success ] && [ "${{ needs.home-list.result }}" = success ]
-  pr-title:
-    if: github.event_name == 'pull_request'
-    uses: fpsot-org/GitHub-Actions/.github/workflows/pr-title.yml@v0
-    permissions:
-      pull-requests: read
   signed-commits:
     if: github.event_name == 'pull_request'
     uses: fpsot-org/GitHub-Actions/.github/workflows/signed-commits.yml@v0
