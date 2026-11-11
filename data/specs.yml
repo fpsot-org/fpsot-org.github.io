@@ -13,3 +13,5 @@
 - repo: fpsot-spec-data-models
 - repo: fpsot-spec-testing
 - repo: fpsot-spec-security
+- repo: fpsot-spec-observability
+- repo: fpsot-spec-identity
