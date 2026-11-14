@@ -39,15 +39,53 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: bash scripts/test-home-list.sh
+  site-test:
+    # Builds the site with the spec-good fixture of fpsot-org/GitHub-Actions, checks the
+    # pages, and checks every outside link of the built pages with lychee
+    # (scripts/test-site.sh). The Roq build runs in the website builder image.
+    runs-on: ubuntu-24.04
+    container: ghcr.io/fpsot-org/fpsot-website-builder@sha256:ac76e576a36cab1505f9bf057301a58a585b7eb0028aa6b1a24920a867d034fc
+    env:
+      TOOLS: .fpsot-tools
+      LYCHEE_VERSION: 0.24.2
+      LYCHEE_SHA256: 1f4e0ef7f6554a6ed33dd7ac144fb2e1bbed98598e7af973042fc5cd43951c9a
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: fpsot-org/GitHub-Actions
+          ref: v0
+          path: ${{ env.TOOLS }}
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: ${{ env.TOOLS }}/tools/go.mod
+          cache: false
+      - name: Build the tools
+        working-directory: ${{ env.TOOLS }}/tools
+        run: go build -o "$RUNNER_TEMP/bin/" ./cmd/...
+      # The builder image has no Python, which site-bundle.sh and the checks need.
+      - run: apt-get update -qq && apt-get install -y -qq --no-install-recommends python3 curl ca-certificates >/dev/null
+      - name: Install lychee
+        run: |
+          curl -sfLo "$RUNNER_TEMP/lychee.tar.gz" "https://github.com/lycheeverse/lychee/releases/download/lychee-v$LYCHEE_VERSION/lychee-x86_64-unknown-linux-gnu.tar.gz"
+          echo "$LYCHEE_SHA256  $RUNNER_TEMP/lychee.tar.gz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/lychee.tar.gz" -C "$RUNNER_TEMP" lychee-x86_64-unknown-linux-gnu/lychee
+          echo "$RUNNER_TEMP/lychee-x86_64-unknown-linux-gnu" >> "$GITHUB_PATH"
+      - env:
+          FPSOT_TOOLS: ${{ github.workspace }}/${{ env.TOOLS }}
+          TOOLS_BIN: ${{ runner.temp }}/bin
+          MVN: mvn
+        run: bash scripts/test-site.sh
   site-ok:
-    # One required check for branch protection: it fails unless the whole build and
-    # the home-list check passed. A skipped job would otherwise count as a pass.
+    # One required check for branch protection: it fails unless the whole build, the
+    # home-list check and the site test passed. A skipped job would otherwise count as
+    # a pass.
     if: always()
-    needs: [build, home-list]
+    needs: [build, home-list, site-test]
     runs-on: ubuntu-24.04
     steps:
       - run: |
-          [ "${{ needs.build.result }}" = success ] && [ "${{ needs.home-list.result }}" = success ]
+          [ "${{ needs.build.result }}" = success ] && [ "${{ needs.home-list.result }}" = success ] && [ "${{ needs.site-test.result }}" = success ]
   signed-commits:
     if: github.event_name == 'pull_request'
     uses: fpsot-org/GitHub-Actions/.github/workflows/signed-commits.yml@v0
