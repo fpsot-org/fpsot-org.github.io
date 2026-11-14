@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 # Builds the site with the spec-good fixture of fpsot-org/GitHub-Actions collected
-# into it, then checks the home pages and the fixture's spec pages.
+# into it, then checks the home pages and the fixture's spec pages, and the outside
+# links of every built page with lychee.
 # Environment: FPSOT_TOOLS (a GitHub-Actions checkout, required), TOOLS_BIN (its
-# built tools, required), MVN (default ./mvnw).
+# built tools, required), MVN (default ./mvnw), FPSOT_SITE_MAVEN_ARGS (extra Maven
+# arguments, as the website builder image sets them), LYCHEE (default lychee).
 set -u
 cd "$(dirname "$0")/.."
 : "${FPSOT_TOOLS:?FPSOT_TOOLS must point to a GitHub-Actions checkout}" "${TOOLS_BIN:?TOOLS_BIN must hold the built tools}"
@@ -29,7 +31,7 @@ PY
 git -C "$src" init -q
 git -C "$src" add -A
 git -C "$src" -c user.name=t -c user.email=t@example.org -c commit.gpgsign=false commit -q -m fixture
-git -C "$src" -c tag.gpgsign=false tag -a v0.1.0 -m v0.1.0
+git -C "$src" -c user.name=t -c user.email=t@example.org -c tag.gpgsign=false tag -a v0.1.0 -m v0.1.0
 git -C "$src" remote add origin https://github.com/fpsot-org/fpsot-spec-good
 # Release PDFs of 421,888 and 1,234,567 bytes, and a combined book of 3,456,789 and
 # 3,500,000 bytes: the pages give their sizes in kB or MB, in each language's format.
@@ -40,7 +42,7 @@ export FPSOT_BOOK_EN_BYTES=3456789 FPSOT_BOOK_FR_BYTES=3500000
 PDF_DIR="$work/pdf" TERMBASE="$FPSOT_TOOLS/testdata/terms.yaml" bash "$FPSOT_TOOLS/scripts/site-bundle.sh" "$src" content public >"$work/bundle.log" 2>&1 \
   || { echo "FAIL: site-bundle.sh:"; cat "$work/bundle.log"; exit 1; }
 rm -rf target
-QUARKUS_ROQ_GENERATOR_BATCH=true ${MVN:-./mvnw} -B -q package quarkus:run >"$work/build.log" 2>&1 \
+QUARKUS_ROQ_GENERATOR_BATCH=true ${MVN:-./mvnw} -B -q ${FPSOT_SITE_MAVEN_ARGS:-} package quarkus:run >"$work/build.log" 2>&1 \
   || { echo "FAIL: site build:"; tail -40 "$work/build.log"; exit 1; }
 out=target/roq
 has() { grep -qF -- "$2" "$out/$1" 2>/dev/null || { echo "FAIL: $1 lacks: $2"; fail=1; }; }
@@ -106,5 +108,21 @@ done
 for f in fr/index.html fr/good/index.html; do
   has $f 'Code du site&nbsp;: <a href="https://github.com/fpsot-org/fpsot-org.github.io/blob/main/LICENSE">Apache-2.0</a>'
 done
+# Every link that leaves the site answers. The site's own addresses point at the live
+# site, which does not hold the fixture, and the fixture's repository does not exist,
+# so both are left out here; site-build.yml checks the site's own links offline on
+# the real build. iso.org, LégisQuébec, CanLII and
+# merriam-webster.com answer 403 to automated readers, and www.canada.ca resets the
+# connection from GitHub runners: pages pair these links with an archived copy, which
+# is checked. The Wayback Machine throttles bursts: a 429 answer counts as reachable.
+"${LYCHEE:-lychee}" --no-progress --max-retries 3 --retry-wait-time 10 --max-concurrency 8 \
+  --root-dir "$PWD/$out" --scheme https --scheme http --accept '200..=299,429' \
+  --exclude '^https://fpsot\.org/' --exclude '^https://github\.com/fpsot-org/fpsot-spec-good/' \
+  --exclude '^https://(www\.)?iso\.org/' \
+  --exclude '^https://(www\.)?merriam-webster\.com/' \
+  --exclude '^https://(www\.)?legisquebec\.gouv\.qc\.ca/' \
+  --exclude '^https://(www\.)?canlii\.org/' \
+  --exclude '^https://www\.canada\.ca/' \
+  "$out"/'**/*.html' >"$work/lychee.log" 2>&1 || { echo "FAIL: outside links:"; cat "$work/lychee.log"; fail=1; }
 [ $fail -eq 0 ] && echo "PASS"
 exit $fail
