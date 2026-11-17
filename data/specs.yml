@@ -17,3 +17,4 @@
 - repo: fpsot-spec-identity
 - repo: fpsot-spec-log
 - repo: fpsot-spec-procurement
+- repo: fpsot-spec-decisions
